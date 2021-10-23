@@ -1,0 +1,4 @@
+*.py[co]
+*.sqlite3
+poetry.lock
+/dist/

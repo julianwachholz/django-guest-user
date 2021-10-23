@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Convert</title>
+</head>
+<body>
+  <form action="{% url "guest_user_convert" %}" method="POST">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit">Convert</button>
+  </form>
+</body>
+</html>

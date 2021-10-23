@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "django-guest-user"
+version = "0.1.0"
+description = "A Django app that lets visitors interact with your site without registration."
+authors = [
+  "Julian Wachholz <julian@wachholz.ch>",
+]
+readme = "README.md"
+license = "MIT"
+
+repository = "https://github.com/julianwachholz/django-guest-user"
+homepage = "https://github.com/julianwachholz/django-guest-user"
+
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "License :: OSI Approved :: MIT License",
+  "Framework :: Django",
+  "Framework :: Django :: 3.0",
+  "Framework :: Django :: 3.1",
+  "Framework :: Django :: 3.2",
+  "Framework :: Django :: 4.0"
+]
+
+packages = [
+    { include = "guest_user" }
+]
+
+[tool.poetry.dependencies]
+python = "^3.6"
+
+[tool.poetry.dev-dependencies]
+Django = "^3.2.8"
+random-username = "^1.0.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
