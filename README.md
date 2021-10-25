@@ -18,7 +18,7 @@ Add the app to your `INSTALLED_APPS` and `AUTHENTICATION_BACKENDS`:
 ```python
 INSTALLED_APPS = [
     ...
-    "django_guest_user",
+    "guest_user",
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -141,6 +141,11 @@ number prefixed by `GUEST_USER_NAME_PREFIX`.
 
 `str`. A prefix to use with the `generate_numbered_username` generator.
 Defaults to `"Guest"`.
+
+### `GUEST_USER_MAX_AGE`
+
+`int`. Seconds to keep a guest user before expiring.
+Defaults to `settings.SESSION_COOKIE_AGE`.
 
 ### `GUEST_USER_CONVERT_FORM`
 

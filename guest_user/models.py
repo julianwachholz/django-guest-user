@@ -69,6 +69,7 @@ class Guest(models.Model):
         verbose_name = "Guest"
         verbose_name_plural = "Guests"
         swappable = "GUEST_USER_MODEL"
+        ordering = ["-created_at"]
 
     def __str__(self):
         return str(self.user)

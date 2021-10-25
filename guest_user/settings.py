@@ -37,6 +37,21 @@ class AppSettings:
         return self.get("NAME_PREFIX", "Guest")
 
     @property
+    def MAX_AGE(self):
+        """
+        Maximum age in seconds for guest sessions to stay valid.
+
+        After this time the session may get deleted by background tasks.
+
+        """
+        max_age = self.get("MAX_AGE", None)
+        if max_age is None:
+            from django.conf import settings as django_settings
+
+            max_age = django_settings.SESSION_COOKIE_AGE
+        return max_age
+
+    @property
     def CONVERT_FORM(self):
         """
         Import path for the form used to convert a guest to a real user.
