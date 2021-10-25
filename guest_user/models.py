@@ -1,6 +1,6 @@
 from django.conf import settings as django_settings
 from django.contrib.auth import get_user_model
-from django.db import models
+from django.db import IntegrityError, models, transaction
 from django.utils.module_loading import import_string
 
 from . import settings
@@ -12,15 +12,29 @@ User = get_user_model()
 
 
 class GuestManager(models.Manager):
-    def create_guest_user(self):
+    @property
+    def generate_username(self):
+        return import_string(settings.NAME_GENERATOR)
+
+    def create_guest_user(self, username=None):
         """
         Create a guest user.
 
         Returns the underlying User object.
 
         """
-        generate_username = import_string(settings.NAME_GENERATOR)
-        user = User.objects.create_user(generate_username(), "")
+        if username is None:
+            username = self.generate_username()
+
+        user = None
+        while user is None:
+            try:
+                with transaction.atomic():
+                    user = User.objects.create_user(username, "")
+            except IntegrityError:
+                # retry with a new username
+                username = self.generate_username()
+
         self.create(user=user)
         return user
 

@@ -55,7 +55,7 @@ ROOT_URLCONF = "test_proj.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "test_proj" / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -68,7 +68,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "tests.wsgi.application"
+WSGI_APPLICATION = "test_proj.wsgi.application"
 
 
 # Database
@@ -106,9 +106,6 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 GUEST_USER_ENABLED = False
-# GUEST_USER_CONVERT_FORM = "apps.accounts.forms.GuestConvertForm"
-GUEST_USER_CONVERT_REDIRECT_URL = "/"
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/

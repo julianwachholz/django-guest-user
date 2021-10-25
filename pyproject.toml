@@ -33,6 +33,8 @@ python = "^3.6.2"
 Django = "^3.2.8"
 random-username = "^1.0.2"
 black = "^21.9b0"
+pytest = "^6.2.5"
+pytest-django = "^4.4.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

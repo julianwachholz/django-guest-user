@@ -19,7 +19,7 @@ class ConvertFormView(FormView):
     anonymous_redirect = None
     user_redirect = None
 
-    next_page = None
+    success_url = None
     redirect_field_name = REDIRECT_FIELD_NAME
     template_name = "guest_user/convert_form.html"
 
@@ -98,7 +98,7 @@ class ConvertFormView(FormView):
 
     def get_default_redirect_url(self):
         """Return the default redirect URL."""
-        return resolve_url(self.next_page or settings.CONVERT_REDIRECT_URL)
+        return resolve_url(self.success_url or settings.CONVERT_REDIRECT_URL)
 
 
 convert_form = ConvertFormView.as_view()

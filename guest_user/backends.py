@@ -1,6 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.backends import ModelBackend
 
+from .functions import is_guest_user
+
 
 class GuestBackend(ModelBackend):
     def authenticate(self, request, username=None, password=None, **kwargs):
@@ -8,9 +10,12 @@ class GuestBackend(ModelBackend):
         UserModel = get_user_model()
 
         try:
-            return UserModel.objects.get(**{UserModel.USERNAME_FIELD: username})
+            user = UserModel.objects.get(**{UserModel.USERNAME_FIELD: username})
         except UserModel.DoesNotExist:
             return None
+        if is_guest_user(user):
+            return user
+        return None
 
     def get_user(self, user_id):
         UserModel = get_user_model()

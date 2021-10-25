@@ -45,6 +45,8 @@ def guest_user_required(
 
     Other visitors will be redirected to `login_url` or a redirect parameter given in the URL.
 
+    TODO: redirect differently depending on anonymous/authenticated
+
     """
     actual_decorator = user_passes_test(
         is_guest_user,
@@ -58,20 +60,22 @@ def guest_user_required(
 
 
 def regular_user_required(
-    function=None, redirect_field_name=REDIRECT_FIELD_NAME, convert_url=None
+    function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url=None
 ):
     """
     Current user must not be a temporary guest.
 
     Guest users will be redirected to the convert page.
 
+    TODO: redirect differently depending on guest/anonymous
+
     """
-    if convert_url is None:
-        convert_url = settings.CONVERT_URL
+    # if convert_url is None:
+    #     convert_url = settings.CONVERT_URL
 
     actual_decorator = user_passes_test(
         lambda u: u.is_authenticated and not is_guest_user(u),
-        login_url=convert_url,
+        login_url=login_url,
         redirect_field_name=redirect_field_name,
     )
     if function:
