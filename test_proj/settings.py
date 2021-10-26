@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "guest_user",
+    "test_proj",
 ]
 
 MIDDLEWARE = [
@@ -104,8 +105,6 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "guest_user.backends.GuestBackend",
 ]
-
-GUEST_USER_ENABLED = False
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
