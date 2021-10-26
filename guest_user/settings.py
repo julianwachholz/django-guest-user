@@ -19,7 +19,7 @@ class AppSettings:
         users to be authenticated if this setting is `False`.
 
         """
-        return self.get("_ENABLED", True)
+        return self.get("ENABLED", True)
 
     @property
     def MODEL(self):

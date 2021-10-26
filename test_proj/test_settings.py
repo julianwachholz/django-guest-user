@@ -1,4 +1,14 @@
+import pytest
 from guest_user.models import GuestManager
+
+
+@pytest.mark.django_db
+def test_setting_enabled(settings, client):
+    settings.GUEST_USER_ENABLED = False
+
+    response = client.get("/allow_guest_user/")
+    assert response.status_code == 200
+    assert response.context["user"].is_anonymous
 
 
 def my_name_generator():
