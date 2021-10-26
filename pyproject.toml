@@ -34,6 +34,7 @@ black = "^21.9b0"
 pytest = "^6.2.5"
 pytest-django = "^4.4.0"
 tox = "^3.24.4"
+flake8 = "^4.0.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -54,9 +54,9 @@ python manage.py migrate
 
 ## How to use
 
-Guest users are not created for every unauthenticated request.
-Instead, use the `@allow_guest_user` decorator on a view to enable
-that view to be accessed by a temporary guest user.
+Guest users are not created for every unauthenticated request. Instead, use the
+`@allow_guest_user` decorator on a view to enable that view to be accessed by
+a temporary guest user.
 
 ```python
 from guest_user.decorators import allow_guest_user
@@ -68,56 +68,95 @@ def my_view(request):
     return HttpResponse(f"Hello, {username}!")
 ```
 
+Each time an anonymous user requests this view, the decorator will create a new
+temporary guest user and automatically create a session for them.
+
+If some parts of the application should not be used by guests, you can use the
+`@require_regular_user` decorator to disable guest access.
+
+At any point in time, the guest user may choose to permanently register with
+the website by using the conversion view.
+
 ## API
 
-### `@guest_user.decorators.allow_guest_user`
+### Decorators
 
-View decorator that will create a temporary guest user in the event
-that the decorated view is accessed by an unauthenticated visitor.
+Module: `guest_user.decorators`
+
+#### `@allow_guest_user`
+
+View decorator that will create a temporary guest user in the event that the
+decorated view is accessed by an unauthenticated visitor.
 
 Takes no arguments.
 
-### `@guest_user.decorators.guest_user_required(redirect_field_name="next", login_url=None)`
+#### `@guest_user_required`
 
-View decorator that redirects to a given URL if the accessing user is
-anonymous or already authenticated.
+View decorator that only allows guest users. Anonymous or registered users will
+be redirected to their respective redirect targets.
+
+```python
+@guest_user_required(anonymous_url="/login/", registered_url="/dashboard/")
+def only_for_guests(request):
+    pass
+```
 
 Arguments:
 
-- `redirect_field_name`: URL query parameter to use to link back in the case of a redirect to the login url. Defaults to `django.contrib.auth.REDIRECT_FIELD_NAME` ("next").
-- `login_url`: URL to redirect to if the user is not authenticated. Defaults to the `LOGIN_URL` setting.
+- `anonymous_url`: Redirect target for anonymous users.
+  Defaults to the `GUEST_USER_REQUIRED_ANON_URL` setting.
+- `registered_url`: Redirect target for registered users.
+  Defaults to the `GUEST_USER_REQUIRED_USER_URL` setting.
 
-### `@guest_user.decorators.regular_user_required(redirect_field_name="next", login_url=None)`
+#### `@regular_user_required`
 
 Decorator that will not allow guest users to access the view.
 Will redirect to the conversion page to allow a guest user to fully register.
 
+```python
+@regular_user_required(login_url="/login/", convert_url="/convert/")
+def only_for_real_users(request):
+    pass
+```
+
 Arguments:
 
-- `redirect_field_name`: URL query parameter to use to link back in the case of a redirect to the login url. Defaults to `django.contrib.auth.REDIRECT_FIELD_NAME` ("next").
-- `login_url`: URL to redirect to if the user is a guest. Defaults to `"guest_user_convert"`.
+- `login_url`: Redirect target for anonymous users.
+  Defaults to the `GUEST_USER_REQUIRED_ANON_URL` setting.
+- `convert_url`: Redirect target for **guest** users.
+  Defaults to the `GUEST_USER_REQUIRED_USER_URL` setting.
+- `redirect_field_name`: URL parameter used to redirect to the origin page.
+  Defaults to `django.contrib.auth.REDIRECT_FIELD_NAME` (`"next"`).
 
-### `guest_user.functions.get_guest_model()`
+### Functions
 
-The guest user model is swappable. This function will return the currently configured model class.
+Module: `guest_user.functions`
 
-### `guest_user.functions.is_guest_user(user)`
+#### `is_guest_user(user)`
 
 Check wether the given user instance is a temporary guest.
 
-### `guest_user.signals.guest_created`
+Returns `bool`.
+
+### Signals
+
+Module: `guest_user.signals`
+
+#### `guest_created(user, request)`
 
 Signal dispatched when a visitor accessed a view that created a guest user.
 
 Provides `user` and `request` arguments.
 
-### `guest_user.signals.converted`
+#### `converted(user)`
 
 Signal dispatched when a guest user is converted to a regular user.
 
 Provides `user` and `request` arguments.
 
-### Template tag `is_guest_user`
+### Template Tags
+
+### `is_guest_user`
 
 A filter to use in templates to check if the user object is a guest.
 
@@ -206,7 +245,8 @@ Default includes a number of well known bots and spiders.
 
 ## Status
 
-This project is currently untested. But thanks to [previous work](https://github.com/danfairs/django-lazysignup) it is largely functional.
+This project is still under development. But thanks to [previous work](https://github.com/danfairs/django-lazysignup) it is largely functional.
 
 I decided to rewrite the project since the original project hasn't seen any
-larger updates for a few years now and the code base was written a long time ago.
+larger updates for a few years now. The initial code base was written a long
+time ago as well.
