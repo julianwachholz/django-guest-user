@@ -6,7 +6,7 @@ from django.utils.module_loading import import_string
 from . import settings
 from .exceptions import NotGuestError
 from .functions import is_guest_user
-from .signals import converted
+from .signals import converted, guest_created
 
 User = get_user_model()
 
@@ -16,7 +16,7 @@ class GuestManager(models.Manager):
     def generate_username(self):
         return import_string(settings.NAME_GENERATOR)
 
-    def create_guest_user(self, username=None):
+    def create_guest_user(self, request=None, username=None):
         """
         Create a guest user.
 
@@ -36,6 +36,8 @@ class GuestManager(models.Manager):
                 username = self.generate_username()
 
         self.create(user=user)
+        if request is not None:
+            guest_created.send(self, user=user, request=request)
         return user
 
     def convert(self, form):

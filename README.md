@@ -98,9 +98,17 @@ The guest user model is swappable. This function will return the currently confi
 
 Check wether the given user instance is a temporary guest.
 
+### `guest_user.signals.guest_created`
+
+Signal dispatched when a visitor accessed a view that created a guest user.
+
+Provides `user` and `request` arguments.
+
 ### `guest_user.signals.converted`
 
-Signal that is dispatched when a guest user is converted to a regular user.
+Signal dispatched when a guest user is converted to a regular user.
+
+Provides `user` and `request` arguments.
 
 ### Template tag `is_guest_user`
 

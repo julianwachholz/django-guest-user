@@ -1,5 +1,6 @@
 import pytest
 from guest_user.functions import is_guest_user
+from guest_user.signals import guest_created
 
 # see views.py for view functions used in these tests
 
@@ -16,6 +17,28 @@ def test_allow_guest_user_with_anonymous(client):
     assert not user.is_anonymous
     assert len(user.username) == 32  # uuid4 length
     assert is_guest_user(user)
+
+
+@pytest.mark.django_db
+def test_allow_guest_user_sends_signal(client):
+    """
+    Check that the guest_created signal is sent with the current request.
+
+    """
+
+    def post_guest_created(sender, user, request, **kwargs):
+        """Add some data after a guest was created."""
+
+        useragent = request.META.get("HTTP_USER_AGENT", "")
+        user.first_name = f"A {useragent} user"
+        user.save()
+
+    guest_created.connect(post_guest_created)
+
+    response = client.get("/allow_guest_user/", **{"HTTP_USER_AGENT": "Firefox"})
+    assert response.status_code == 200
+    user = response.context["user"]
+    assert user.first_name == "A Firefox user"
 
 
 @pytest.mark.django_db
