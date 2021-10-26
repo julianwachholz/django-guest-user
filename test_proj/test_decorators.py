@@ -12,10 +12,29 @@ def test_allow_guest_user_with_anonymous(client):
     response = client.get("/allow_guest_user/")
 
     assert response.status_code == 200
-    response_user = response.context["user"]
-    assert not response_user.is_anonymous
-    assert len(response_user.username) == 32  # uuid4 length
-    assert is_guest_user(response_user)
+    user = response.context["user"]
+    assert not user.is_anonymous
+    assert len(user.username) == 32  # uuid4 length
+    assert is_guest_user(user)
+
+
+@pytest.mark.django_db
+def test_allow_guest_user_ignores_robots(client):
+    """
+    No guest user is created for web crawlers etc. on the block list.
+
+    """
+    response = client.get(
+        "/allow_guest_user/",
+        **{
+            "HTTP_USER_AGENT": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
+        },
+    )
+
+    assert response.status_code == 200
+    user = response.context["user"]
+    assert user.is_anonymous
+    assert not is_guest_user(user)
 
 
 @pytest.mark.django_db

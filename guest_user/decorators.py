@@ -22,11 +22,9 @@ def allow_guest_user(function=None):
 
         if settings.ENABLED and request.user.is_anonymous:
             user_agent = request.META.get("HTTP_USER_AGENT", "")
-
-            if not settings.BLOCKED_USER_AGENTS.match(user_agent):
+            if not settings.BLOCKED_USER_AGENTS.search(user_agent):
                 Guest = get_guest_model()
-                user = Guest.objects.create_guest_user()
-                # request.user = None
+                user = Guest.objects.create_guest_user(request)
                 user = authenticate(username=user.username)
                 assert user, (
                     "Guest authentication failed. Do you have "
