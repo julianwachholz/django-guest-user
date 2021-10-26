@@ -81,6 +81,34 @@ class AppSettings:
         return self.get("CONVERT_REDIRECT_URL", "guest_user_convert_success")
 
     @property
+    def REQUIRED_ANON_URL(self):
+        """
+        Default redirect target when an anonymous visitor
+        tries to access a view decorated with @guest_user_required.
+
+        """
+        url = self.get("REQUIRED_ANON_REDIRECT", None)
+        if url is None:
+            from django.conf import settings as django_settings
+
+            url = django_settings.LOGIN_URL
+        return url
+
+    @property
+    def REQUIRED_USER_URL(self):
+        """
+        Default redirect target when a registered user
+        tries to access a view decorated with @guest_user_required.
+
+        """
+        url = self.get("REQUIRED_USER_REDIRECT", None)
+        if url is None:
+            from django.conf import settings as django_settings
+
+            url = django_settings.LOGIN_REDIRECT_URL
+        return url
+
+    @property
     def BLOCKED_USER_AGENTS(self):
         """
         A list of ignored user agents that will not create guest users.

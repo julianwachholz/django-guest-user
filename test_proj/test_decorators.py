@@ -34,25 +34,25 @@ def test_allow_guest_user_with_authenticated(authenticated_client):
 @pytest.mark.django_db
 def test_guest_user_required_with_anonymous(client):
     """
-    Visitors must first be assigned a guest user before visiting a guest required view.
+    If a visitor isn't a guest user yet, they should
+    be redirected to the login page.
 
     """
     response = client.get("/guest_user_required/")
 
     assert response.status_code == 302
-    assert response.url == "/accounts/login/?next=/guest_user_required/"
+    assert response.url == "/accounts/login/"
 
 
-@pytest.mark.skip(reason="not implemented yet")
 @pytest.mark.django_db
 def test_guest_user_required_with_authenticated(authenticated_client):
     """
-    Visitors must first be assigned a guest user before visiting a guest required view.
+    A registered user should not access sites only meant for guest users.
 
     """
     response = authenticated_client.get("/guest_user_required/")
     assert response.status_code == 302
-    # TODO authenticated users should be redirect to LOGIN_REDIRECT_URL
+    # authenticated users should be redirect to LOGIN_REDIRECT_URL
     assert response.url == "/accounts/profile/"
 
 
@@ -77,7 +77,6 @@ def test_regular_user_required_with_anonymous(client):
     assert response.url == "/accounts/login/?next=/regular_user_required/"
 
 
-@pytest.mark.skip(reason="not implemented yet")
 @pytest.mark.django_db
 def test_regular_user_required_with_guest(client):
     response = client.get("/allow_guest_user/")
@@ -86,7 +85,7 @@ def test_regular_user_required_with_guest(client):
 
     response = client.get("/regular_user_required/")
     assert response.status_code == 302
-    # TODO guest users should be redirect to the convert view instead
+    # guest users should be redirect to the convert view instead
     assert response.url == "/convert/?next=/regular_user_required/"
 
 

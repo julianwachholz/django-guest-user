@@ -171,6 +171,18 @@ Defaults to `"guest_user_convert"`.
 `str`. URL name to redirect to after conversion, unless a redirect parameter was provided.
 Defaults to `"guest_user_convert_success"`.
 
+### `GUEST_USER_REQUIRED_ANON_URL`
+
+`str`. URL name to redirect to when an anonymous visitor tries to access a view
+with the `@guest_user_required` decorator.
+Defaults to `settings.LOGIN_URL`.
+
+### `GUEST_USER_REQUIRED_USER_URL`
+
+`str`. URL name to redirect to when a registered user tries to access a view
+with the `@guest_user_required` decorator.
+Defaults to `settings.LOGIN_REDIRECT_URL`.
+
 ### `GUEST_USER_BLOCKED_USER_AGENTS`
 
 `list[str]`. Web crawlers and other user agents to block from becoming guest users.
