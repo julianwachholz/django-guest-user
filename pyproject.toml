@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "django-guest-user"
-version = "0.1.2"
+version = "0.2.0"
 description = "A Django app that lets visitors interact with your site without registration."
 authors = [
   "Julian Wachholz <julian@wachholz.ch>",
