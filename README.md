@@ -6,7 +6,14 @@
 A Django app that allows visitors to interact with your site as a guest user
 without requiring registration.
 
-Largely inspired by [django-lazysignup](https://github.com/danfairs/django-lazysignup) and rewritten for Django 3 and Python 3.6 and up.
+Largely inspired by [django-lazysignup](https://github.com/danfairs/django-lazysignup) and rewritten for Django 3.1+ and Python 3.7+.
+
+## Requirements
+
+The tests cover the following versions:
+
+- Python 3.7, 3.8, 3.9
+- Django 3.1, 3.2 and `main`
 
 ## Installation
 

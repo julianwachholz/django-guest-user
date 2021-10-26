@@ -27,14 +27,13 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = "^3.6.2"
+python = "^3.7"
 
 [tool.poetry.dev-dependencies]
-Django = "^3.2.8"
-random-username = "^1.0.2"
 black = "^21.9b0"
 pytest = "^6.2.5"
 pytest-django = "^4.4.0"
+tox = "^3.24.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

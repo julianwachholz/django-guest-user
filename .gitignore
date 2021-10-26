@@ -2,3 +2,5 @@
 *.sqlite3
 poetry.lock
 /dist/
+.tox
+.pytest_cache
