@@ -15,26 +15,32 @@ def allow_guest_user(function=None):
 
     """
 
-    def wrapped(request, *args, **kwargs):
-        assert hasattr(
-            request, "session"
-        ), "Please add 'django.contrib.sessions' to INSTALLED_APPS."
+    def decorator(view_func):
+        @wraps(view_func)
+        def wrapper(request, *args, **kwargs):
+            assert hasattr(
+                request, "session"
+            ), "Please add 'django.contrib.sessions' to INSTALLED_APPS."
 
-        if settings.ENABLED and request.user.is_anonymous:
-            user_agent = request.META.get("HTTP_USER_AGENT", "")
-            if not settings.BLOCKED_USER_AGENTS.search(user_agent):
-                Guest = get_guest_model()
-                user = Guest.objects.create_guest_user(request)
-                user = authenticate(username=user.username)
-                assert user, (
-                    "Guest authentication failed. Do you have "
-                    "'guest_user.backends.GuestBackend' in AUTHENTICATION_BACKENDS?"
-                )
-                login(request, user)
+            if settings.ENABLED and request.user.is_anonymous:
+                user_agent = request.META.get("HTTP_USER_AGENT", "")
+                if not settings.BLOCKED_USER_AGENTS.search(user_agent):
+                    Guest = get_guest_model()
+                    user = Guest.objects.create_guest_user(request)
+                    user = authenticate(username=user.username)
+                    assert user, (
+                        "Guest authentication failed. Do you have "
+                        "'guest_user.backends.GuestBackend' in AUTHENTICATION_BACKENDS?"
+                    )
+                    login(request, user)
 
-        return function(request, *args, **kwargs)
+            return view_func(request, *args, **kwargs)
 
-    return wraps(function)(wrapped)
+        return wrapper
+
+    if function:
+        return decorator(function)
+    return decorator
 
 
 def guest_user_required(
