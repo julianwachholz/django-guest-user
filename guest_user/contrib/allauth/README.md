@@ -27,6 +27,19 @@ INSTALLED_APPS = [
 ]
 ```
 
+## Usage
+
+In your convert page template, you can integrate the social account login:
+
+```
+{% load guest_user %}
+
+{% include "socialaccount/snippets/provider_list.html" with process=user|is_guest_user|yesno:"connect,login" %}
+```
+
+If you use the same inclusion tag for signup and login, make sure that the
+`process` argument is set to `connect` for guest users, as seen above.
+
 ### Signals
 
 Module: `guest_user.contrib.allauth.signals`
