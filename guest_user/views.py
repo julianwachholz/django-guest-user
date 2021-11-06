@@ -74,7 +74,7 @@ class ConvertFormView(FormView):
             pass
         else:
             # Authenticate the user with standard backend.
-            login(self.request, authenticate(**form.get_credentials()))
+            login(self.request, authenticate(self.request, **form.get_credentials()))
 
         return redirect(self.get_success_url())
 

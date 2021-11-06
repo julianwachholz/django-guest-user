@@ -28,7 +28,7 @@ def maybe_create_guest_user(request):
         if not settings.BLOCKED_USER_AGENTS.search(user_agent):
             Guest = get_guest_model()
             user = Guest.objects.create_guest_user(request)
-            user = authenticate(username=user.username)
+            user = authenticate(request=request, username=user.username)
             assert user, (
                 "Guest authentication failed. Do you have "
                 "'guest_user.backends.GuestBackend' in AUTHENTICATION_BACKENDS?"
