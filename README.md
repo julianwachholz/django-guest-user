@@ -69,6 +69,15 @@ the website by using the conversion view. This will delete the associated
 `User` will not be prevented by `PROTECT` or `RESTRICT` on_delete clauses.
 Instead, it's recommended that every foreign key to a User either use [CASCADE or SET_NULL](https://docs.djangoproject.com/en/3.2/ref/models/fields/#django.db.models.ForeignKey.on_delete).
 
+## Additional Features
+
+### django-allauth integration
+
+A small submodule is provided that will allow converting guest users by connecting
+a social account with [django-allauth](https://www.intenct.nl/projects/django-allauth/).
+
+See documentation details for it in [`guest_user.contrib.allauth`](./guest_user/contrib/allauth/).
+
 ## API
 
 ### Decorators

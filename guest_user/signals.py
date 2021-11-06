@@ -1,6 +1,6 @@
-import django.dispatch
+from django.dispatch import Signal
 
-guest_created = django.dispatch.Signal()
+guest_created = Signal()
 """
 A guest account has been created for a visitor.
 
@@ -9,7 +9,7 @@ A guest account has been created for a visitor.
 
 """
 
-converted = django.dispatch.Signal()
+converted = Signal()
 """
 A guest user converted to a regular registered user.
 

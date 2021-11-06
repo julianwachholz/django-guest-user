@@ -99,17 +99,12 @@ def test_guest_user_required_with_authenticated(authenticated_client):
 
 
 @pytest.mark.django_db
-def test_guest_user_required_with_guest_user(client):
-    # first request to become a guest user
-    response = client.get("/allow_guest_user/")
-    guest = response.context["user"]
-    assert is_guest_user(guest)
-
-    response = client.get("/guest_user_required/")
+def test_guest_user_required_with_guest_user(guest_client):
+    response = guest_client.get("/guest_user_required/")
 
     assert response.status_code == 200
     # still the same guest user
-    assert response.context["user"].id == guest.id
+    assert response.context["user"].id == guest_client.user.id
 
 
 @pytest.mark.django_db
@@ -120,12 +115,8 @@ def test_regular_user_required_with_anonymous(client):
 
 
 @pytest.mark.django_db
-def test_regular_user_required_with_guest(client):
-    response = client.get("/allow_guest_user/")
-    guest = response.context["user"]
-    assert is_guest_user(guest)
-
-    response = client.get("/regular_user_required/")
+def test_regular_user_required_with_guest(guest_client):
+    response = guest_client.get("/regular_user_required/")
     assert response.status_code == 302
     # guest users should be redirect to the convert view instead
     assert response.url == "/convert/?next=/regular_user_required/"
