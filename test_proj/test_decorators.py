@@ -47,18 +47,19 @@ def test_allow_guest_user_sends_signal(client, url):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("url", ["/allow_guest_user/", "/mixin/allow_guest_user/"])
-def test_allow_guest_user_ignores_robots(client, url):
+@pytest.mark.parametrize(
+    "useragent",
+    [
+        "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)",
+        "Mozilla/5.0 (compatible; YandexBot/3.0; +http://yandex.com/bots)",
+    ],
+)
+def test_allow_guest_user_ignores_robots(client, url, useragent):
     """
     No guest user is created for web crawlers etc. on the block list.
 
     """
-    response = client.get(
-        url,
-        **{
-            "HTTP_USER_AGENT": "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)"
-        },
-    )
-
+    response = client.get(url, **{"HTTP_USER_AGENT": useragent})
     assert response.status_code == 200
     user = response.context["user"]
     assert user.is_anonymous

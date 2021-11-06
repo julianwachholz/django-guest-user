@@ -125,7 +125,7 @@ class AppSettings:
                 "Slurp",
                 "DuckDuckBot",
                 "Baiduspider",
-                "YandexBot",
+                "Yandex(Mobile)?Bot",
                 "Sogou",
                 "Exabot",
                 "facebot",
