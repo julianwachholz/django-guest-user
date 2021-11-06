@@ -65,6 +65,14 @@ At any point in time, the guest user may choose to permanently register with
 the website by using the conversion view. This will delete the associated
 `Guest` instance for the user and prevent deletion from cleanup jobs.
 
+Guest instances must be deleted periodically. This can be done manually in the admin,
+by selecting the "Delete selected guests older than 1 day" action, or by running
+the management command on a schedule (for example using a cronjob):
+
+```
+./manage.py delete_expired_users
+```
+
 **Note**: Your Django project should be set up in such a way, that deleting a
 `User` will not be prevented by `PROTECT` or `RESTRICT` on_delete clauses.
 Instead, it's recommended that every foreign key to a User either use [CASCADE or SET_NULL](https://docs.djangoproject.com/en/3.2/ref/models/fields/#django.db.models.ForeignKey.on_delete).
