@@ -13,7 +13,7 @@ Largely inspired by [django-lazysignup](https://github.com/danfairs/django-lazys
 The tests cover the following versions:
 
 - Python 3.7, 3.8, 3.9
-- Django 3.1, 3.2 and `main`
+- Django 3.1, 3.2 and `main` (4.0)
 
 ## Installation
 
@@ -27,7 +27,7 @@ Add the app to your `INSTALLED_APPS` and `AUTHENTICATION_BACKENDS`:
 
 ```python
 INSTALLED_APPS = [
-    ...
+    # ...
     "guest_user",
 ]
 
@@ -41,7 +41,7 @@ Add the patterns to your URL config:
 
 ```python
 urlpatterns = [
-    ...
+    # ...
     path("convert/", include("guest_user.urls")),
 ]
 ```
@@ -54,28 +54,20 @@ python manage.py migrate
 
 ## How to use
 
-Guest users are not created for every unauthenticated request. Instead, use the
-`@allow_guest_user` decorator on a view to enable that view to be accessed by
-a temporary guest user.
+Guest users are **not** created for every unauthenticated request. Instead, use the
+[`@allow_guest_user`](#allow_guest_user) decorator on a view to enable that view to
+be accessed by a temporary guest user.
 
-```python
-from guest_user.decorators import allow_guest_user
-
-@allow_guest_user
-def my_view(request):
-    # Will always be either a registered a guest user.
-    username = request.user.username
-    return HttpResponse(f"Hello, {username}!")
-```
-
-Each time an anonymous user requests this view, the decorator will create a new
-temporary guest user and automatically create a session for them.
-
-If some parts of the application should not be used by guests, you can use the
-`@require_regular_user` decorator to disable guest access.
+Each time an anonymous user requests a decorated view, a new temporary guest user
+will be created and logged in with a randomly generated username.
 
 At any point in time, the guest user may choose to permanently register with
-the website by using the conversion view.
+the website by using the conversion view. This will delete the associated
+`Guest` instance for the user and prevent deletion from cleanup jobs.
+
+**Note**: Your Django project should be set up in such a way, that deleting a
+`User` will not be prevented by `PROTECT` or `RESTRICT` on_delete clauses.
+Instead, it's recommended that every foreign key to a User either use [CASCADE or SET_NULL](https://docs.djangoproject.com/en/3.2/ref/models/fields/#django.db.models.ForeignKey.on_delete).
 
 ## API
 
@@ -87,6 +79,16 @@ Module: `guest_user.decorators`
 
 View decorator that will create a temporary guest user in the event that the
 decorated view is accessed by an unauthenticated visitor.
+
+```python
+from guest_user.decorators import allow_guest_user
+
+@allow_guest_user
+def my_view(request):
+    # Will always be either a registered a guest user.
+    username = request.user.username
+    return HttpResponse(f"Hello, {username}!")
+```
 
 Takes no arguments.
 
@@ -103,15 +105,18 @@ def only_for_guests(request):
 
 Arguments:
 
-- `anonymous_url`: Redirect target for anonymous users.
+- **anonymous_url**: Redirect target for anonymous users.
   Defaults to the `GUEST_USER_REQUIRED_ANON_URL` setting.
-- `registered_url`: Redirect target for registered users.
+- **registered_url**: Redirect target for registered users.
   Defaults to the `GUEST_USER_REQUIRED_USER_URL` setting.
 
 #### `@regular_user_required`
 
-Decorator that will not allow guest users to access the view.
-Will redirect to the conversion page to allow a guest user to fully register.
+If some parts of the application should not be used by guests, you can use
+this decorator to disable guest access.
+
+In the event that a guest user tries to access a view decorated with it,
+they will be redirected to the conversion page.
 
 ```python
 @regular_user_required(login_url="/login/", convert_url="/convert/")
@@ -121,12 +126,12 @@ def only_for_real_users(request):
 
 Arguments:
 
-- `login_url`: Redirect target for anonymous users.
+- **login_url**: Redirect target for anonymous users.
   Defaults to the `GUEST_USER_REQUIRED_ANON_URL` setting.
-- `convert_url`: Redirect target for **guest** users.
+- **convert_url**: Redirect target for **guest** users.
   Defaults to the `GUEST_USER_REQUIRED_USER_URL` setting.
-- `redirect_field_name`: URL parameter used to redirect to the origin page.
-  Defaults to `django.contrib.auth.REDIRECT_FIELD_NAME` (`"next"`).
+- **redirect_field_name**: URL parameter used to redirect to the origin page.
+  Defaults to `django.contrib.auth.REDIRECT_FIELD_NAME` (which is `"next"`).
 
 ### Functions
 
@@ -142,7 +147,7 @@ Returns `bool`.
 
 Module: `guest_user.signals`
 
-#### `guest_created(user, request)`
+#### `guest_created(request, user)`
 
 Signal dispatched when a visitor accessed a view that created a guest user.
 
@@ -152,11 +157,11 @@ Provides `user` and `request` arguments.
 
 Signal dispatched when a guest user is converted to a regular user.
 
-Provides `user` and `request` arguments.
+Provides `user` argument.
 
 ### Template Tags
 
-### `is_guest_user`
+#### `is_guest_user`
 
 A filter to use in templates to check if the user object is a guest.
 
@@ -174,74 +179,88 @@ Various settings are provided to allow customization of the guest user behavior.
 
 ### `GUEST_USER_ENABLED`
 
-`bool`. If `False`, the `@allow_guest_user` decorator will not create guest users.
+**bool** - If False, the `@allow_guest_user` decorator will not create guest users.
 Defaults to `True`.
 
 ### `GUEST_USER_MODEL`
 
-`str`. The swappable model identifier to use as the guest model.
-Defaults to `"guest_user.Guest"`.
+**str**. The swappable model identifier to use as the guest model.
+Defaults to `guest_user.Guest`.
 
 ### `GUEST_USER_NAME_GENERATOR`
 
-`str`. Import path to a function that will generate a username for a guest user.
-Defaults to `"guest_user.functions.generate_uuid_username"`.
+**str**. Import path to a function that will generate a username for a guest user.
+Defaults to `guest_user.functions.generate_uuid_username`.
 
 Included with the package are two alternatives:
 
-`"guest_user.functions.generate_numbered_username"`: Will create a random four digit
-number prefixed by `GUEST_USER_NAME_PREFIX`.
+- `guest_user.functions.generate_numbered_username`
 
-`"guest_user.functions.generate_friendly_username"`: Creates a friendly and easy to remember username by combining an adjective, noun and number. Requires `random_username` to be installed.
+  Will create a random four digit
+  number prefixed by `GUEST_USER_NAME_PREFIX`.
+
+- `guest_user.functions.generate_friendly_username`
+
+  Creates a friendly and easy to remember username by combining an
+  adjective, noun and number. Requires the package [`random_username`](https://pypi.org/project/random-username/).
 
 ### `GUEST_USER_NAME_PREFIX`
 
-`str`. A prefix to use with the `generate_numbered_username` generator.
-Defaults to `"Guest"`.
+**str**. A prefix to use with the `generate_numbered_username` generator.
+
+Defaults to `Guest`.
 
 ### `GUEST_USER_MAX_AGE`
 
-`int`. Seconds to keep a guest user before expiring.
+**int**. Seconds to keep a guest user before expiring.
+
 Defaults to `settings.SESSION_COOKIE_AGE`.
 
 ### `GUEST_USER_CONVERT_FORM`
 
-`str`. Import path for the guest conversion form.
-Must implement `get_credentials` to be passed to Django's `authenticate` function.
-Defaults to `"guest_user.forms.UserCreationForm"`.
+**str**. Import path for the guest conversion form.
+Must implement `get_credentials` to be passed to Django's authenticate function.
+
+Defaults to `guest_user.forms.UserCreationForm`.
 
 ### `GUEST_USER_CONVERT_PREFILL_USERNAME`
 
-`bool`. Set the generated username as initial value on the conversion form.
+**bool**. Set the generated username as initial value on the conversion form.
+
 Defaults to `False`.
 
 ### `GUEST_USER_CONVERT_URL`
 
-`str`. URL name for the convert view.
-Defaults to `"guest_user_convert"`.
+**str**. URL name for the convert view.
+
+Defaults to `guest_user_convert`.
 
 ### `GUEST_USER_CONVERT_REDIRECT_URL`
 
-`str`. URL name to redirect to after conversion, unless a redirect parameter was provided.
-Defaults to `"guest_user_convert_success"`.
+**str**. URL name to redirect to after conversion, unless a redirect parameter was provided.
+
+Defaults to `guest_user_convert_success`.
 
 ### `GUEST_USER_REQUIRED_ANON_URL`
 
-`str`. URL name to redirect to when an anonymous visitor tries to access a view
+**str**. URL name to redirect to when an anonymous visitor tries to access a view
 with the `@guest_user_required` decorator.
+
 Defaults to `settings.LOGIN_URL`.
 
 ### `GUEST_USER_REQUIRED_USER_URL`
 
-`str`. URL name to redirect to when a registered user tries to access a view
+**str**. URL name to redirect to when a registered user tries to access a view
 with the `@guest_user_required` decorator.
+
 Defaults to `settings.LOGIN_REDIRECT_URL`.
 
 ### `GUEST_USER_BLOCKED_USER_AGENTS`
 
-`list[str]`. Web crawlers and other user agents to block from becoming guest users.
+**list[str]**. Web crawler and other user agents to block from becoming guest users.
 The list will be combined into a regular expression.
-Default includes a number of well known bots and spiders.
+
+Default includes [a number of well known bots and spiders](https://github.com/julianwachholz/django-guest-user/blob/main/guest_user/settings.py#L122-L133).
 
 ## Status
 
