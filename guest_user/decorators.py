@@ -1,12 +1,11 @@
 from functools import wraps
-from urllib.parse import urlparse
 
 from django.conf import settings as django_settings
-from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
-from django.shortcuts import redirect, resolve_url
+from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.shortcuts import redirect
 
 from . import settings
-from .functions import get_guest_model, is_guest_user
+from .functions import is_guest_user, maybe_create_guest_user, redirect_with_next
 
 
 def allow_guest_user(function=None):
@@ -18,22 +17,7 @@ def allow_guest_user(function=None):
     def decorator(view_func):
         @wraps(view_func)
         def wrapper(request, *args, **kwargs):
-            assert hasattr(
-                request, "session"
-            ), "Please add 'django.contrib.sessions' to INSTALLED_APPS."
-
-            if settings.ENABLED and request.user.is_anonymous:
-                user_agent = request.META.get("HTTP_USER_AGENT", "")
-                if not settings.BLOCKED_USER_AGENTS.search(user_agent):
-                    Guest = get_guest_model()
-                    user = Guest.objects.create_guest_user(request)
-                    user = authenticate(username=user.username)
-                    assert user, (
-                        "Guest authentication failed. Do you have "
-                        "'guest_user.backends.GuestBackend' in AUTHENTICATION_BACKENDS?"
-                    )
-                    login(request, user)
-
+            maybe_create_guest_user(request)
             return view_func(request, *args, **kwargs)
 
         return wrapper
@@ -53,6 +37,10 @@ def guest_user_required(
 
     Anonymous users will be redirected to `anonymous_url`.
     Registered users will be redirected to `registered_url`.
+
+    Since being a guest user is not a state that a registered
+    user can ever revert back to, there is no "next" URL handling
+    in this decorator.
 
     """
 
@@ -83,8 +71,11 @@ def regular_user_required(
     """
     Current user must not be a temporary guest.
 
-    Guest users will be redirected to the `convert_url`.
     Anonymous users will be redirected to `login_url`.
+    Guest users will be redirected to the `convert_url`.
+
+    The redirected URL will get a "next" parameter added to the URL
+    in order to redirect the user back to the page they were trying to access.
 
     """
 
@@ -94,25 +85,11 @@ def regular_user_required(
             user = request.user
             if user.is_authenticated and not is_guest_user(user):
                 return view_func(request, *args, **kwargs)
-
             if user.is_anonymous:
                 redirect_url = login_url or django_settings.LOGIN_URL
             else:
                 redirect_url = convert_url or settings.CONVERT_URL
-            path = request.build_absolute_uri()
-            resolved_login_url = resolve_url(redirect_url)
-
-            # If the login url is the same scheme and net location then just
-            # use the path as the "next" url.
-            login_scheme, login_netloc = urlparse(resolved_login_url)[:2]
-            current_scheme, current_netloc = urlparse(path)[:2]
-            if (not login_scheme or login_scheme == current_scheme) and (
-                not login_netloc or login_netloc == current_netloc
-            ):
-                path = request.get_full_path()
-            from django.contrib.auth.views import redirect_to_login
-
-            return redirect_to_login(path, resolved_login_url, redirect_field_name)
+            return redirect_with_next(request, redirect_url, redirect_field_name)
 
         return wrapper
 
