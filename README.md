@@ -9,6 +9,9 @@ without requiring registration.
 
 Largely inspired by [django-lazysignup](https://github.com/danfairs/django-lazysignup) and rewritten for Django 3.1+ and Python 3.7+.
 
+Find the [**complete documentation**](https://django-guest-user.readthedocs.io/)
+on Read the Docs.
+
 ## Quickstart
 
 1. Install the `django-guest-user` package
