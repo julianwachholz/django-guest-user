@@ -20,7 +20,7 @@ on Read the Docs.
 4. Include `guest_user.urls` in your URLs
 5. Decorate your views with `@allow_guest_user`:
 
-   ```
+   ```python
    from guest_user.decorators import allow_guest_user
 
    @allow_guest_user
