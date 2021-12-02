@@ -17,7 +17,6 @@ class AllowGuestUserMixin:
         return super().dispatch(request, *args, **kwargs)
 
 
-# guest_user_required
 class GuestUserRequiredMixin:
     """
     Current user must be a temporary guest.
@@ -44,7 +43,6 @@ class GuestUserRequiredMixin:
         return redirect(redirect_url)
 
 
-# regular_user_required
 class RegularUserRequiredMixin:
     """
     Current user must not be a temporary guest.

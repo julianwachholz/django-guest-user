@@ -12,6 +12,12 @@ def allow_guest_user(function=None):
     """
     Allow anonymous users to access the view by creating a guest user.
 
+    Usage example::
+
+        @allow_guest_user
+        def hello_world(request):
+            return HttpResponse(f"Hello {request.user.username}!")
+
     """
 
     def decorator(view_func):
@@ -35,12 +41,20 @@ def guest_user_required(
     """
     Current user must be a temporary guest.
 
-    Anonymous users will be redirected to `anonymous_url`.
-    Registered users will be redirected to `registered_url`.
-
     Since being a guest user is not a state that a registered
     user can ever revert back to, there is no "next" URL handling
     in this decorator.
+
+    :param anonymous_url: Redirect target for anonymous users.
+      Defaults to ``GUEST_USER_REQUIRED_ANON_URL``.
+    :param registered_url: Redirect target for registered users.
+      Defaults to ``GUEST_USER_REQUIRED_USER_URL``.
+
+    Usage example::
+
+        @guest_user_required(anonymous_url="/login/", registered_url="/dashboard/")
+        def only_for_guests(request):
+            pass
 
     """
 
@@ -71,11 +85,15 @@ def regular_user_required(
     """
     Current user must not be a temporary guest.
 
-    Anonymous users will be redirected to `login_url`.
-    Guest users will be redirected to the `convert_url`.
-
     The redirected URL will get a "next" parameter added to the URL
     in order to redirect the user back to the page they were trying to access.
+
+    :param login_url: Redirect target for anonymous users.
+      Defaults to ``LOGIN_URL``.
+    :param convert_url: Redirect target for guest users.
+      Defaults to ``CONVERT_URL``.
+    :param redirect_field_name: URL parameter used to redirect to the origin page.
+      Defaults to ``django.contrib.auth.REDIRECT_FIELD_NAME`` (= "next").
 
     """
 

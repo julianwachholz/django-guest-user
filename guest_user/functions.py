@@ -4,7 +4,6 @@ from urllib.parse import urlparse
 
 from django.apps import apps as django_apps
 from django.contrib.auth import authenticate, get_user_model, login
-from django.contrib.auth.views import redirect_to_login
 from django.core.exceptions import ImproperlyConfigured
 from django.shortcuts import resolve_url
 
@@ -54,7 +53,10 @@ def get_guest_model():
 
 
 def is_guest_user(user) -> bool:
-    """Check if the given user instance is a temporary guest."""
+    """
+    Check if the given user instance is a temporary guest.
+
+    """
 
     if user.is_anonymous:
         return False
@@ -110,5 +112,6 @@ def redirect_with_next(request, redirect_url, redirect_field_name):
         not login_netloc or login_netloc == current_netloc
     ):
         path = request.get_full_path()
+    from django.contrib.auth.views import redirect_to_login
 
     return redirect_to_login(path, resolved_login_url, redirect_field_name)

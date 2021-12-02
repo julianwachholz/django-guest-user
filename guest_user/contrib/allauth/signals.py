@@ -1,8 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.dispatch import Signal, receiver
 
-from allauth.account.adapter import get_adapter as get_account_adapter
-from allauth.socialaccount.adapter import get_adapter as get_social_adapter
 from allauth.socialaccount.signals import social_account_added
 
 from ...functions import get_guest_model, is_guest_user
@@ -24,6 +22,9 @@ def convert_guest_with_social_login(sender, request, sociallogin, **kwargs):
         # Convert the user right away, since the social account
         # has already been connected at this point.
         get_guest_model().objects.filter(user=user).delete()
+
+        from allauth.account.adapter import get_adapter as get_account_adapter
+        from allauth.socialaccount.adapter import get_adapter as get_social_adapter
 
         # Normally, allauth will only populate a user that registers using a social account,
         # but in this case the user already exists, so we need to populate it ourselves.
@@ -52,6 +53,7 @@ converted_social_account = Signal()
 """
 A guest user converted by connecting a social account.
 
+:param user: The converted user object.
 :param sociallogin: The social login object that converted the guest.
 
 """

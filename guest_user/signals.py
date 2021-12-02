@@ -2,7 +2,7 @@ from django.dispatch import Signal
 
 guest_created = Signal()
 """
-A guest account has been created for a visitor.
+A visitor accessed a view that created a guest user.
 
 :param user: The new guest user.
 :param request: The request that created the guest user.

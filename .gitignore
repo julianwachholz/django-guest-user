@@ -4,3 +4,4 @@ poetry.lock
 /dist/
 .tox
 .pytest_cache
+docs/_build
