@@ -35,11 +35,17 @@ on Read the Docs.
 A more detailed guide is available in the
 [installation documentation](https://django-guest-user.readthedocs.io/en/latest/setup.html#how-to-install).
 
+## Contributing
+
+All contributions are welcome! Please read the
+[contributing guidelines](CONTRIBUTING.md) in this repostory.
+
 ## Development Status
 
-This project is still under development. But thanks to [previous work](https://github.com/danfairs/django-lazysignup)
-it is largely functional.
+This project is under active development. Thanks to
+[previous work](https://github.com/danfairs/django-lazysignup) the core
+functionality is well-established and this package builds on top of it.
 
-I decided to rewrite the project since the original project hasn't seen any
-larger updates for a few years now. The initial code base was written a long
-time ago as well.
+This project was created because the original project has been in an inactive
+state without major updates in a long time. The code base was rewritten with
+only modern versions of Python and Django in mind.
