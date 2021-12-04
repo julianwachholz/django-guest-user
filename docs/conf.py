@@ -13,7 +13,7 @@
 import os
 import sys
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "test_proj.settings")
+import django
 
 sys.path.insert(0, os.path.abspath(".."))
 
@@ -30,6 +30,10 @@ release = "0.3.0"
 
 # -- General configuration ---------------------------------------------------
 
+# Setup django
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "test_proj.settings")
+django.setup()
+
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
@@ -45,6 +49,10 @@ add_module_names = False
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3/", None),
+    "django": (
+        "https://docs.djangoproject.com/en/3.2/",
+        "http://docs.djangoproject.com/en/3.2/_objects/",
+    ),
 }
 intersphinx_disabled_domains = ["std"]
 

@@ -21,6 +21,7 @@ modern Django and Python versions.
    setup
    usage
    contrib
+   advanced
    config
    api
 
