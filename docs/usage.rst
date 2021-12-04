@@ -9,20 +9,24 @@ Instead, the :func:`@allow_guest_user<guest_user.decorators.allow_guest_user>`
 decorator or :class:`AllowGuestUserMixin<guest_user.mixins.AllowGuestUserMixin>`
 is used to tell Django explicitly which views may create a new temporary guest.
 
-Each time an anonymous user requests a decorated view, a new temporary guest
-user will be created and logged in with a randomly generated username. The
-username generator can be defined using the
-:attr:`GUEST_USER_NAME_GENERATOR<guest_user.app_settings.AppSettings.NAME_GENERATOR>` setting.
-
 .. code:: python
 
   from guest_user.decorators import allow_guest_user
 
   @allow_guest_user
   def hello_guest(request):
-      # Default username generator creates a UUID4
-      # "Hello, b5daf1dd-1a2f-4d18-a74c-f13bf2f086f7!"
+      """
+      This view will always have an authenticated user, but some may be guests.
+      The default username generator will create a UUID4.
+
+      Example response: "Hello, b5daf1dd-1a2f-4d18-a74c-f13bf2f086f7!"
+      """
       return HttpResponse(f"Hello, {request.user.username}!")
+
+Each time an anonymous user requests a decorated view, a new temporary guest
+user will be created and logged in with a randomly generated username. The
+username generator can be defined using the
+:attr:`GUEST_USER_NAME_GENERATOR<guest_user.app_settings.AppSettings.NAME_GENERATOR>` setting.
 
 Converting guests
 -----------------
@@ -32,8 +36,9 @@ website by using the conversion view. This will delete the associated Guest
 model instance for the user and prevent deletion from cleanup jobs.
 
 Given your existing project with a link to a registration page, you can add use
-the provided :func:`is_guest_user` template filter to check if the current user
-is a guest and link to the conversion page respectively.
+the provided :func:`is_guest_user<guest_user.templatetags.guest_user.is_guest_user>`
+template filter to check if the current user is a guest and link to the conversion
+page respectively.
 
 .. code:: jinja
 
@@ -48,7 +53,8 @@ is a guest and link to the conversion page respectively.
   {% endif %}
 
 The default form is a subclass of Django's UserCreationForm with the addition
-of a `get_credentials` method required to sign the user in after converting.
+of a :meth:`get_credentials()<guest_user.forms.UserCreationForm.get_credentials>`
+method required to sign the user in after converting.
 
 If your sign up process requires additional data, you can change the form with the
 :attr:`GUEST_USER_CONVERT_FORM<guest_user.app_settings.AppSettings.CONVERT_FORM>` setting.
@@ -65,13 +71,13 @@ Restricting access
 
 While ``django-guest-user`` makes it very easy for visitors to start using your
 site, there may still be parts of it that should not be accessible to guests.
-Two :mod:`decorators<guest_user.decorators>` or :mod:`mixins<guest_user.mixins>`
+Two additional :mod:`decorators<guest_user.decorators>` or :mod:`mixins<guest_user.mixins>`
 can be used to restrict access to either regular users or guests only.
 
 .. code:: python
 
   from guest_user.decorators import guest_user_required
-  from guest_user.mixins import GuestUserRequiredMixin
+  from guest_user.mixins import RegularUserRequiredMixin
 
   @guest_user_required
   def why_convert(request):
@@ -82,8 +88,7 @@ can be used to restrict access to either regular users or guests only.
       """Only allow registered users to change their settings."""
       form_class = SettingsForm
 
-
-Maintenance
+Cleaning up
 -----------
 
 Because the user sessions have a limited lifetime, guest users need to be cleaned
@@ -96,7 +101,26 @@ command ``delete_expired_users`` on a schedule (for example using a cronjob)::
 
   ./manage.py delete_expired_users
 
+These methods will remove any Guest users that have a created_at date older than
+the :attr:`GUEST_USER_MAX_AGE<guest_user.app_settings.AppSettings.MAX_AGE>` setting.
+By default this is the same duration as the Django session cookie.
+
 .. note::
 
   To prevent exceptions or data integrity errors, each foreign key to your User
   model should have ``on_delete`` set to ``CASCADE`` or ``SET_NULL``.
+
+Customizing
+-----------
+
+This package provides a number of :doc:`settings<config>` to customize the
+behaviour of guest user creation and conversion. This section will show how to
+use different options to better fit your specific requirements.
+
+Temporary usernames
+```````````````````
+
+To generate temporary usernames for your guests that you can also show in your
+templates, you can override the function used to generate the username by setting
+:attr:`GUEST_USER_NAME_GENERATOR<guest_user.app_settings.AppSettings.NAME_GENERATOR>`
+to an import string of a custom function or use one of the provided generators.

@@ -76,7 +76,7 @@ class AppSettings:
 
         After this time the session may get deleted by background tasks.
 
-        :default: ``SESSION_COOKIE_AGE``
+        :default: :ref:`django:ref/settings:``session_cookie_age```
 
         """
         max_age = self.get("MAX_AGE", None)
@@ -94,7 +94,7 @@ class AppSettings:
         The form must have a method ``get_credentials`` to authenticate the user
         after registering.
 
-        :default: ``"guest_user.forms.UserCreationForm"``
+        :default: :class:`guest_user.forms.UserCreationForm`
 
         """
         return self.get("CONVERT_FORM", "guest_user.forms.UserCreationForm")
@@ -138,7 +138,7 @@ class AppSettings:
         Default redirect target when an anonymous visitor tries to access a view
         where a guest user is required.
 
-        :default: ``LOGIN_URL``
+        :default: :ref:`django:ref/settings:``login_url```
 
         """
         url = self.get("REQUIRED_ANON_REDIRECT", None)
@@ -154,7 +154,7 @@ class AppSettings:
         Default redirect target when a registered user tries to access a view
         where a guest user is required.
 
-        :default: ``LOGIN_REDIRECT_URL``
+        :default: :ref:`django:ref/settings:``login_redirect_url```
 
         """
         url = self.get("REQUIRED_USER_REDIRECT", None)

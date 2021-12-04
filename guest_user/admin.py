@@ -41,16 +41,28 @@ class GuestAdmin(admin.ModelAdmin):
         return False
 
     def get_deleted_objects(self, objs, request):
-        """Show the correct CASCADE for guest deletion."""
+        """
+        Show the correct CASCADE for guest deletion.
+
+        This Guest admin's DELETE actions will always try to delete the associated
+        user objects instead of the guest instances, to allow a full cascade.
+
+        """
         user_objs = [obj.user for obj in objs]
         return super().get_deleted_objects(user_objs, request)
 
     def delete_model(self, request, obj):
-        """Make the delete action cascade."""
+        """
+        Make the delete action cascade.
+
+        """
         obj.user.delete()
 
     def delete_queryset(self, request, queryset):
-        """Make the delete action cascade."""
+        """
+        Make the delete action cascade.
+
+        """
         for obj in queryset:
             obj.user.delete()
 

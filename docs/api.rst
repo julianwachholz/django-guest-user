@@ -25,10 +25,8 @@ Mixins
 Template Tags
 -------------
 
-The package registers a template filter to use in your Django templates.
-
-.. autodata:: guest_user.templatetags.guest_user.is_guest_user
-   :no-value:
+.. automodule:: guest_user.templatetags.guest_user
+   :members:
 
 Functions
 ---------
@@ -42,4 +40,18 @@ Signals
 -------
 
 .. automodule:: guest_user.signals
+   :members:
+
+Models
+------
+
+.. autoclass:: guest_user.models.Guest
+
+.. autoclass:: guest_user.models.GuestManager
+   :members:
+
+Forms
+-----
+
+.. automodule:: guest_user.forms
    :members:

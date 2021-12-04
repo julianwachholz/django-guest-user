@@ -23,7 +23,7 @@ class GuestQuerySet(models.QuerySet):
         ).select_related("user")
 
 
-class BaseGuestManager(models.Manager):
+class GuestManager(models.Manager.from_queryset(GuestQuerySet)):
     """
     Manager for Guest objects.
 
@@ -91,9 +91,6 @@ class BaseGuestManager(models.Manager):
         for guest in self.filter_expired():
             # Call delete method to trigger signals and cascades
             guest.user.delete()
-
-
-GuestManager = BaseGuestManager.from_queryset(GuestQuerySet)
 
 
 class Guest(models.Model):

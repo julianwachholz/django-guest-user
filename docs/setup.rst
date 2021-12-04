@@ -6,7 +6,7 @@ This project is thoroughly tested on these setups:
 - Python 3.7, 3.8 and 3.9
 - Django 3.1, 3.2 and the main branch (4.0)
 
-In addition, your Django project must be using ``django.contrib.auth``.
+In addition, your Django project should be using :doc:`django:ref/contrib/auth`.
 
 How to install
 ==============
@@ -17,7 +17,8 @@ Install the package from PyPI with your favorite package manager::
    # or simiar, e.g.
    poetry add django-guest-user
 
-Add the app to your ``INSTALLED_APPS`` and ``AUTHENTICATION_BACKENDS``::
+Add the app to your :ref:`django:ref/settings:``installed_apps```
+and :ref:`django:ref/settings:``authentication_backends```::
 
    # settings.py
    INSTALLED_APPS = [
@@ -31,7 +32,7 @@ Add the app to your ``INSTALLED_APPS`` and ``AUTHENTICATION_BACKENDS``::
       "guest_user.backends.GuestBackend",
    ]
 
-Allow guests to convert to registered users by adding the URLs::
+Allow guests to convert to registered users by adding the URLs to your :doc:`URLconf<django:topics/http/urls>`::
 
    # urls.py
    urlpatterns = [

@@ -8,6 +8,11 @@ If you want to add additional fields to your temporary guests, you can swap out
 the Guest model with your own by customizing the
 :attr:`GUEST_USER_MODEL<guest_user.app_settings.AppSettings.MODEL>` setting.
 
+.. warning::
+
+    Swappable models in Django are still experimental and this feature may not
+    work as intended as tests are only minimal.
+
 This example overrides the guest model with a custom model to override the
 manager and the logic on how to create a user, which can be useful if you do not
 use the :doc:`django:ref/contrib/auth` app.

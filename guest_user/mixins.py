@@ -10,6 +10,18 @@ class AllowGuestUserMixin:
     """
     Allow anonymous users to access the view by creating a guest user.
 
+    This mixin does not require overriding any attributes.
+
+    Example usage:
+
+    .. code:: python
+
+        from guest_user.mixins import AllowGuestUserMixin
+
+        class HelloWorldView(AllowGuestUserMixin, View):
+            def get(self, request):
+                return HttpResponse(f"Hello {request.user.username}!")
+
     """
 
     def dispatch(self, request, *args, **kwargs):
@@ -21,17 +33,33 @@ class GuestUserRequiredMixin:
     """
     Current user must be a temporary guest.
 
-    Anonymous users will be redirected to `anonymous_url`.
-    Registered users will be redirected to `registered_url`.
-
     Since being a guest user is not a state that a registered
     user can ever revert back to, there is no "next" URL handling
     in this mixin.
 
+    Example usage:
+
+    .. code:: python
+
+        from guest_user.mixins import GuestUserRequiredMixin
+
+        class OnlyGuestView(GuestUserRequiredMixin, View):
+            anonymous_url = "/login/"
+            registered_url = "/dashboard/"
+
     """
 
-    anonymous_url = None
-    registered_url = None
+    anonymous_url: str = None
+    """
+    Redirect target for anonymous users.
+    Defaults to :attr:`GUEST_USER_REQUIRED_ANON_URL<guest_user.app_settings.AppSettings.REQUIRED_ANON_URL>`.
+    """
+
+    registered_url: str = None
+    """
+    Redirect target for registered users.
+    Defaults to :attr:`GUEST_USER_REQUIRED_USER_URL<guest_user.app_settings.AppSettings.REQUIRED_USER_URL>`.
+    """
 
     def dispatch(self, request, *args, **kwargs):
         if is_guest_user(request.user):
@@ -53,11 +81,36 @@ class RegularUserRequiredMixin:
     The redirected URL will get a "next" parameter added to the URL
     in order to redirect the user back to the page they were trying to access.
 
+    Example usage:
+
+    .. code:: python
+
+        from guest_user.mixins import RegularUserRequiredMixin
+
+        class RealUsersOnlyView(RegularUserRequiredMixin, View):
+            login_url = "/login/"
+            convert_url = "/convert/?from=RealUsersOnlyView"
+
     """
 
-    login_url = None
-    convert_url = None
-    redirect_field_name = REDIRECT_FIELD_NAME
+    login_url: str = None
+    """
+    Redirect target for anonymous users.
+    Defaults to :ref:`django:ref/settings:``login_url```.
+    """
+
+    convert_url: str = None
+    """
+    Redirect target for guest users.
+    Defaults to :attr:`GUEST_USER_CONVERT_URL<guest_user.app_settings.AppSettings.CONVERT_URL>`.
+    """
+
+    redirect_field_name: str = REDIRECT_FIELD_NAME
+    """
+    URL parameter used to redirect to the origin page. Defaults to
+    :attr:`django.contrib.auth.REDIRECT_FIELD_NAME<django:django.contrib.auth.mixins.AccessMixin.redirect_field_name>`
+    (= "next").
+    """
 
     def get_login_url(self):
         if not self.request.user.is_anonymous:

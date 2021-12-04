@@ -9,7 +9,7 @@ such as Twitter, Apple, Google, etc.
 
 .. _django-allauth: https://www.intenct.nl/projects/django-allauth/
 
-This module registers signal handlers that will allow automatically converting
+This module registers a signal handler that will allow automatically converting
 guest users when they decide to connect a social media account.
 The user's social media account username will be used as their username.
 

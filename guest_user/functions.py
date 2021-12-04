@@ -14,7 +14,7 @@ def maybe_create_guest_user(request):
     """
     Create a guest user and log them in.
 
-    This function will authenticate a new guest user should the visitor
+    This function will create and authenticate a new guest user should the visitor
     not be authenticated already and their user agent isn't on the block list.
 
     """
@@ -98,10 +98,11 @@ def redirect_with_next(request, redirect_url, redirect_field_name):
     """
     Redirect the user to a login page with a "next" parameter.
 
-    Taken from this Django function:
-    https://github.com/django/django/blob/ba9ced3e9a643a05bc521f0a2e6d02e3569de374/django/contrib/auth/decorators.py#L22-L33
+    :meta private:
 
     """
+    # https://github.com/django/django/blob/ba9ced3e9a643a05bc521f0a2e6d02e3569de374/django/contrib/auth/decorators.py#L22-L33  # noqa
+
     path = request.build_absolute_uri()
     resolved_login_url = resolve_url(redirect_url)
 
