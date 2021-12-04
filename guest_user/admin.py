@@ -1,13 +1,12 @@
 from datetime import timedelta
 
 from django.contrib import admin
-from django.utils.timezone import now
 
 from . import settings
+from .functions import get_guest_model
 from .models import Guest
 
 
-@admin.register(Guest)
 class GuestAdmin(admin.ModelAdmin):
     list_display = ["user", "created_at", "is_expired"]
     actions = ["delete_expired_guests"]
@@ -54,3 +53,7 @@ class GuestAdmin(admin.ModelAdmin):
         """Make the delete action cascade."""
         for obj in queryset:
             obj.user.delete()
+
+
+if get_guest_model() == Guest:
+    admin.site.register(Guest, GuestAdmin)
