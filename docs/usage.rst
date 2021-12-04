@@ -83,13 +83,16 @@ can be used to restrict access to either regular users or guests only.
       form_class = SettingsForm
 
 
-Cleaning up
+Maintenance
 -----------
 
-Guest instances must be deleted periodically so they won't fill up your database.
+Because the user sessions have a limited lifetime, guest users need to be cleaned
+up at regular intervals to prevent filling up the database with users and related
+objects that cannot be accessed anymore.
+
 This can be done manually in the admin, by selecting the
 `"Delete selected guests older than ..."` action, or by running the management
-command on a schedule (for example using a cronjob)::
+command ``delete_expired_users`` on a schedule (for example using a cronjob)::
 
   ./manage.py delete_expired_users
 

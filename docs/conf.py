@@ -13,6 +13,8 @@
 import os
 import sys
 
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "test_proj.settings")
+
 sys.path.insert(0, os.path.abspath(".."))
 
 

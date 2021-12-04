@@ -24,22 +24,6 @@ modern Django and Python versions.
    config
    api
 
-Quickstart
-==========
-
-1. Install the ``django-guest-user`` package
-2. Add ``guest_user`` to your ``INSTALLED_APPS`` and migrate your database
-3. Add ``guest_user.backends.GuestBackend`` to your ``AUTHENTICATION_BACKENDS``
-4. Include ``guest_user.urls`` in your URLs
-5. Decorate your views with ``@allow_guest_user``::
-
-      from guest_user.decorators import allow_guest_user
-
-      @allow_guest_user
-      def my_view(request):
-          assert request.user.is_authenticated
-          return render(request, "my_view.html")
-
 Indices and tables
 ==================
 

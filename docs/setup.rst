@@ -14,6 +14,8 @@ How to install
 Install the package from PyPI with your favorite package manager::
 
    pip install django-guest-user
+   # or simiar, e.g.
+   poetry add django-guest-user
 
 Add the app to your ``INSTALLED_APPS`` and ``AUTHENTICATION_BACKENDS``::
 
@@ -25,6 +27,7 @@ Add the app to your ``INSTALLED_APPS`` and ``AUTHENTICATION_BACKENDS``::
 
    AUTHENTICATION_BACKENDS = [
       "django.contrib.auth.backends.ModelBackend",
+      # it should be the last entry to prevent unauthorized access
       "guest_user.backends.GuestBackend",
    ]
 
