@@ -16,11 +16,9 @@ def test_manager_filter_expired():
 
     old_user = GuestModel.objects.create_guest_user()
     # Force update the created_at timestamp
-    GuestModel.objects.filter(user=old_user).update(
-        created_at=now() - timedelta(days=25)
-    )
-    old_user.refresh_from_db()
-    assert old_user.guest.is_expired(), old_user.guest.created_at
+    old_guest = GuestModel.objects.filter(user=old_user)
+    old_guest.update(created_at=now() - timedelta(days=25))
+    assert old_guest.get().is_expired(), old_user.guest.created_at
 
     assert GuestModel.objects.count() == 4
     assert GuestModel.objects.filter_expired().count() == 1
