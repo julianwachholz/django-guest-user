@@ -15,17 +15,16 @@ class GuestAdmin(admin.ModelAdmin):
     readonly_fields = ["user", "created_at", "is_expired"]
 
     def is_expired(self, obj):
-        return obj.user.last_login < now() - timedelta(seconds=settings.MAX_AGE)
+        return obj.is_expired()
 
     is_expired.boolean = True
 
     def delete_expired_guests(self, request, queryset):
-        delete_before = now() - timedelta(seconds=settings.MAX_AGE)
-        expired_guests = queryset.filter(user__last_login__lt=delete_before)
+        expired_guests = queryset.filter_expired()
         count = expired_guests.count()
 
         for guest in expired_guests:
-            # call delete method to trigger signals and cascades
+            # Call delete method to trigger signals and cascades
             guest.user.delete()
 
         self.message_user(request, f"Deleted {count} guests.")

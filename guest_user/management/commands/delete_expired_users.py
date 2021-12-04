@@ -1,10 +1,6 @@
-from datetime import timedelta
-
 from django.core.management.base import BaseCommand
-from django.utils.timezone import now
 
-from ... import settings
-from ...models import Guest
+from ...functions import get_guest_model
 
 
 class Command(BaseCommand):
@@ -12,10 +8,5 @@ class Command(BaseCommand):
 
     def handle(self, **options):
         """Delete every user"""
-        delete_before = now() - timedelta(seconds=settings.MAX_AGE)
-        guests = Guest.objects.filter(
-            user__last_login__lt=delete_before,
-        ).select_related("user")
-
-        for guest in guests:
-            guest.user.delete()
+        GuestModel = get_guest_model()
+        GuestModel.objects.delete_expired()
