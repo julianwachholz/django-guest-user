@@ -78,8 +78,9 @@ def generate_uuid_username() -> str:
 def generate_numbered_username() -> str:
     """Generate a random username based on a prefix and a random number."""
     prefix = settings.NAME_PREFIX
-    number = random.randint(1, 9999)
-    return f"{prefix}{number:04}"
+    digits = settings.NAME_SUFFIX_DIGITS
+    number = random.randint(1, (10 ** digits) - 1)
+    return f"{prefix}{number:{f'0{digits}'}}"
 
 
 def generate_friendly_username() -> str:
