@@ -6,6 +6,9 @@
 
 # -- Path setup --------------------------------------------------------------
 
+import importlib
+import inspect
+
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
@@ -14,6 +17,7 @@ import os
 import sys
 
 import django
+import pkg_resources
 
 sys.path.insert(0, os.path.abspath(".."))
 
@@ -25,8 +29,10 @@ copyright = "2021, Julian Wachholz"
 author = "Julian Wachholz"
 
 # The full version, including alpha/beta/rc tags
-release = "0.3.0"
+release = pkg_resources.get_distribution("django-guest-user").version
 
+if os.getenv("READTHEDOCS_VERSION") == "latest":
+    release = "main"
 
 # -- General configuration ---------------------------------------------------
 
@@ -40,6 +46,7 @@ django.setup()
 extensions = [
     "sphinx.ext.doctest",
     "sphinx.ext.autodoc",
+    "sphinx.ext.linkcode",
     "sphinx.ext.autosummary",
     "sphinx.ext.intersphinx",
 ]
@@ -55,6 +62,33 @@ intersphinx_mapping = {
     ),
 }
 intersphinx_disabled_domains = ["std"]
+
+# Repository URL, used with `linkcode_resolve`
+repository = "https://github.com/julianwachholz/django-guest-user"
+
+
+def linkcode_resolve(domain, info):
+    if domain != "py":
+        return None
+    module = info["module"]
+    if not module:
+        return None
+
+    mod = importlib.import_module(module)
+    attrs = info["fullname"].split(".")
+    obj = inspect.getattr_static(mod, attrs[0])
+
+    if len(attrs) > 1:
+        attr = inspect.getattr_static(obj, attrs[1])
+        obj = attr
+
+    try:
+        definition_line = inspect.getsourcelines(obj)[1]
+        filename = module.replace(".", "/")
+        return f"{repository}/blob/{release}/{filename}.py#L{definition_line}"
+    except TypeError:
+        return None
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ["_templates"]

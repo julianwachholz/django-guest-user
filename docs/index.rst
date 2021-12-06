@@ -29,6 +29,7 @@ modern Django and Python versions.
 Quick links
 -----------
 
+- `PyPI Package <https://pypi.org/project/django-guest-user/>`_
 - `GitHub Repository <https://github.com/julianwachholz/django-guest-user>`_
 - `5 Steps Quickstart <https://github.com/julianwachholz/django-guest-user#quickstart>`_
 - `How to Contribute <https://github.com/julianwachholz/django-guest-user/blob/main/CONTRIBUTING.md>`_
