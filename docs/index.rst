@@ -14,12 +14,16 @@ as if they were registered users without having to sign up first.
 
 .. _Django: https://www.djangoproject.com/
 
-By allowing anonymous guests to use all features of your page, the barrier to
-entry is lowered and conversion rates for new users can increase. Visitors will
+Anonymous visitors who request a decorated page get a real temporary user object
+assigned and are logged in automatically.
+
+By allowing these guests to use all features of your page, the barrier to entry
+is lowered and conversion rates for new users can increase. Visitors will
 be more invested in your service and more likely to convert if they already made
-progress using your application. Converting to a permanent user takes very few
-clicks and allows visitors to save their progress and don't risk to lose it
-once the guest users are cleaned up.
+progress and created content using your application.
+
+Converting to a permanent user takes very few clicks and allows visitors to save
+their progress and don't risk to lose it once the guest users are cleaned up.
 
 This project was largely inspired by `django-lazysignup`_ and rewritten for
 modern Django and Python versions.

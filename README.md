@@ -4,8 +4,12 @@
 
 # django-guest-user
 
-Allow anonymous visitors to interact with your site like a temporary user
-("guest") without requiring registration.
+Allow visitors to interact with your site like a temporary user ("guest")
+without requiring registration.
+
+Anonymous visitors who request a decorated page get a real temporary user object
+assigned and are logged in automatically. They can use the site like a normal
+user until they decide to convert to a real user account to save their data.
 
 Inspired by and as an alternative for [django-lazysignup](https://github.com/danfairs/django-lazysignup)
 and rewritten for Django 3.1+ and Python 3.7+.
