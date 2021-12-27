@@ -3,8 +3,8 @@ Dependencies
 
 This project is thoroughly tested on these setups:
 
-- Python 3.7, 3.8 and 3.9
-- Django 3.1, 3.2 and the main branch (4.0)
+- Python 3.7, 3.8, 3.9 and 3.10
+- Django 3.2, 4.0 and the main branch
 
 In addition, your Django project should be using :doc:`django:ref/contrib/auth`.
 
