@@ -19,7 +19,7 @@ the new user will get the username "Rufus3". This suggests allowing users to
 change their username later when desired.
 
 Setup
-`````
+~~~~~
 
 This submodule is not enabled by default. To enable it, add it to your ``INSTALLED_APPS``.
 
@@ -35,7 +35,7 @@ This submodule is not enabled by default. To enable it, add it to your ``INSTALL
   ]
 
 Usage
-`````
+~~~~~
 
 In your convert page template, you can integrate the social account login.
 
@@ -49,7 +49,7 @@ If you use the same inclusion tag for signup and login, make sure that the proce
 argument is set to connect for guest users, as seen above.
 
 Signals
-```````
+~~~~~~~
 
 You may connect an additional signal that is called when a guest user converted
 by connecting a social account.
