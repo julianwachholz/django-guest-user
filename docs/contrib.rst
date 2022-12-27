@@ -69,3 +69,45 @@ As an example, this handler will save the avatar URL.
           profile = user.profile
           profile.avatar_url = avatar_url
           profile.save()
+
+
+django-tos
+----------
+
+`Django-TOS`_ allows sites to force users to explicitly agree to each revision of
+the site's terms of service.
+
+.. _django-tos: https://github.com/revsys/django-tos/
+
+Django-TOS can do this one of two ways - (1) only when a user logs in, and (2) on
+each request by each user, implemented with a Django middleware. Django-guest-users
+does not interfere with option (1), but it does interfere with option (2).
+
+.. note::
+   This module is not necessary if you use option (1), but is helpful if you use
+   option (2).
+
+This module provides a custom middleware that allows Django-TOS to skip the TOS
+check for guest users (eg: those users who have an auto-generated guest user account,
+but do not have an explicit user account).
+
+Setup
+~~~~~
+
+Install and configure django-tos with option (2) before setting up this module.
+
+This submodule is not enabled by default. To enable it, add it to your
+``INSTALLED_APPS``.
+
+.. code:: python
+
+  INSTALLED_APPS = [
+      "tos",
+      # ...
+      "guest_user",
+      "guest_user.contrib.tos",
+  ]
+
+Next, instead of adding ``tos.middleware.UserAgreementMiddleware`` to ``MIDDLEWARE``
+in your project's ``settings.py``, add
+``guest_user.contrib.tos.middleware.GuestUserAgreementMiddleware``.
