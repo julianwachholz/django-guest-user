@@ -94,20 +94,7 @@ but do not have an explicit user account).
 Setup
 ~~~~~
 
-Install and configure django-tos with option (2) before setting up this module.
-
-This submodule is not enabled by default. To enable it, add it to your
-``INSTALLED_APPS``.
-
-.. code:: python
-
-  INSTALLED_APPS = [
-      "tos",
-      # ...
-      "guest_user",
-      "guest_user.contrib.tos",
-  ]
-
-Next, instead of adding ``tos.middleware.UserAgreementMiddleware`` to ``MIDDLEWARE``
-in your project's ``settings.py``, add
+Install and configure django-tos with option (2), but instead of adding
+``tos.middleware.UserAgreementMiddleware`` to ``MIDDLEWARE`` in your project's
+``settings.py``, add
 ``guest_user.contrib.tos.middleware.GuestUserAgreementMiddleware``.
