@@ -79,7 +79,7 @@ def generate_numbered_username() -> str:
     """Generate a random username based on a prefix and a random number."""
     prefix = settings.NAME_PREFIX
     digits = settings.NAME_SUFFIX_DIGITS
-    number = random.randint(1, (10 ** digits) - 1)
+    number = random.randint(1, (10**digits) - 1)
     return f"{prefix}{number:{f'0{digits}'}}"
 
 
