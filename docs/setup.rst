@@ -46,7 +46,7 @@ Last but not least, prepare the guest user table by running migrations::
 
 
 Migrating from ``django-lazysignup``
-````````````````````````````````````
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ``django-guest-user`` can be used a a drop-in replacement for `django-lazysignup`_.
 

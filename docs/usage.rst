@@ -118,7 +118,7 @@ behaviour of guest user creation and conversion. This section will show how to
 use different options to better fit your specific requirements.
 
 Temporary usernames
-```````````````````
+~~~~~~~~~~~~~~~~~~~
 
 To generate temporary usernames for your guests that you can also show in your
 templates, you can override the function used to generate the username by setting
