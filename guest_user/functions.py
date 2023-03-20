@@ -25,9 +25,13 @@ def maybe_create_guest_user(request):
     if settings.ENABLED and request.user.is_anonymous:
         user_agent = request.META.get("HTTP_USER_AGENT", "")
         if not settings.BLOCKED_USER_AGENTS.search(user_agent):
+            UserModel = get_user_model()
             Guest = get_guest_model()
             user = Guest.objects.create_guest_user(request)
-            user = authenticate(request=request, username=user.username)
+            user = authenticate(
+                request=request,
+                username=getattr(user, UserModel.USERNAME_FIELD),
+            )
             assert user, (
                 "Guest authentication failed. Do you have "
                 "'guest_user.backends.GuestBackend' in AUTHENTICATION_BACKENDS?"

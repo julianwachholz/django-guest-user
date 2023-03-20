@@ -1,5 +1,5 @@
 from django.conf import settings as django_settings
-from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, login
+from django.contrib.auth import REDIRECT_FIELD_NAME, authenticate, get_user_model, login
 from django.shortcuts import redirect, resolve_url
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.module_loading import import_string
@@ -49,7 +49,8 @@ class ConvertFormView(FormView):
         """Return the initial data to use for forms on this view."""
         initial = super().get_initial()
         if settings.CONVERT_PREFILL_USERNAME:
-            initial["username"] = self.request.user.username
+            UserModel = get_user_model()
+            initial["username"] = getattr(self.request.user, UserModel.USERNAME_FIELD)
         return initial
 
     def get_form_kwargs(self):
