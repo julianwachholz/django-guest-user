@@ -45,6 +45,7 @@ class Migration(migrations.Migration):
             options={
                 "verbose_name": "Guest",
                 "verbose_name_plural": "Guests",
+                "ordering": ["-created_at"],
                 "swappable": "GUEST_USER_MODEL",
             },
         ),
