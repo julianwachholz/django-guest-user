@@ -19,6 +19,8 @@ To start working on `django-guest-user`, you need:
 - This package is built using [Poetry](https://python-poetry.org/), please
   [install Poetry](https://python-poetry.org/docs/#installation)
   if you haven't already.
+- Code is formatted using [Black](https://black.readthedocs.io/en/stable/),
+  please install and run it before committing your changes.
 
 After preparing the above dependencies, you are ready to open a terminal and
 run the following commands:
