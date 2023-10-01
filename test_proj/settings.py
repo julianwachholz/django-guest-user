@@ -55,6 +55,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "test_proj.urls"
@@ -137,3 +138,15 @@ STATIC_URL = "/static/"
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Django Allauth configuration required to run tests
+SOCIALACCOUNT_PROVIDERS = {
+    "twitter": {
+        "APP": {
+            "client_id": "dummy_for_test",
+            "secret": "dummy_for_test",
+            "key": "dummy_for_test",
+        }
+    }
+}
