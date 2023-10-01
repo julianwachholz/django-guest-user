@@ -7,7 +7,7 @@ django-allauth
 `django-allauth`_ allows users to register with a multitude of third party providers
 such as Twitter, Apple, Google, etc.
 
-.. _django-allauth: https://www.intenct.nl/projects/django-allauth/
+.. _django-allauth: https://allauth.org/
 
 This module registers a signal handler that will allow automatically converting
 guest users when they decide to connect a social media account.
