@@ -12,7 +12,7 @@ assigned and are logged in automatically. They can use the site like a normal
 user until they decide to convert to a real user account to save their data.
 
 Inspired by and as an alternative for [django-lazysignup](https://github.com/danfairs/django-lazysignup)
-and rewritten for Django 3.2+ and Python 3.7+.
+and rewritten for Django 3.2+ and Python 3.8+.
 
 ## Documentation
 

@@ -15,7 +15,7 @@ To start working on `django-guest-user`, you need:
 - [Git](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
   Git is the version control system tracking changes in the code used on GitHub.
 - [Python](https://www.python.org/downloads/) installed on your system
-  (at least version 3.7)
+  (at least version 3.8)
 - This package is built using [Poetry](https://python-poetry.org/), please
   [install Poetry](https://python-poetry.org/docs/#installation)
   if you haven't already.
