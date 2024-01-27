@@ -5,7 +5,7 @@
   <title>Convert</title>
 </head>
 <body>
-  <form action="{% url "guest_user_convert" %}" method="POST">
+  <form action="{% url "core:guest_user_convert" %}" method="POST">
     {% csrf_token %}
 
     {{ form.as_p }}
