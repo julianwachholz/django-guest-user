@@ -130,7 +130,7 @@ class AppSettings:
         :default: ``"guest_user_convert_success"``
 
         """
-        return self.get("CONVERT_REDIRECT_URL", "guest_user_convert_success")
+        return self.get("CONVERT_REDIRECT_URL", "core:guest_user_convert_success")
 
     @property
     def REQUIRED_ANON_URL(self) -> str:
